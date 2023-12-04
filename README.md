@@ -1,4 +1,4 @@
-# Django Tutorial - AUTHENTICATION SYSTEM #
+# Django Tutorial - AUTHENTICATION SYSTEM(SET UP REGISTER & LOGIN BACK-END FOR YOUR WEB) #
 
 In this tutorial, I would introduce to you some basic features of authentication system in Django framework including registration, login, password reset, userprofile.
 
@@ -8,10 +8,95 @@ In this tutorial, I would introduce to you some basic features of authentication
 
 + *One of unique features of Django is the Apps in Django. The Apps feature allows us to divide applications into independent sub-apps, each performing a specific task, and developers can easily integrate between these apps without the need for extensive source code changes. In this case, we will create an app named " User " for authentication* => This one, I wrote a post on Facebook about it.
 
+### What will you learn ? ###
+
+(1) Custom User Model (AbstractUser vs AbstractBaseUser)
+(2) Custom Model Manager
+(3) Settings, Form, Register User in Admin
 
 ### FEATURE 1 : REGISTRATION ###
 
-**Step 1**:  Define RegistrationForm 
+**USER MODEL**:  
+
++ **AbstractUser**: You understand simply that Django provide you abstract class from its model module `django.contrib.auth.models`. Use `AbstractUser` when you just want to inherit from `AbstractUser` such as username, email, password, first_name, last_name, v.v. (common fields and pre-built methods)
+
+  Now, you will create `models.py` file under your app :
+
+```python
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+class CustomUser(AbstractUser):
+    date_of_birth = models.DateField(null=True, blank=True)
+    def __str__(self):
+          return self.username
+```
+
+Here, you already inherited `date_of_birth` and `email` from `AbstractUser`
+
+
++ **AbstractBaseUser**: Same as `AbstractUser`, the difference is that you will create a completely new based on your idea. You will define yourself fields such as username, email ... It will be the better choice if you want more control over how your user model is built.
+
+Similarly, you create `models.py` file under your app :
+
+(1) Create a custom manager:
+
+```python
+
+from django.contrib.auth.models import BaseUserManager
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, date_of_birth, password=None, **extra_fields):
+        if not email:
+            raise ValueError('The Email field must be set')
+
+        email = self.normalize_email(email)
+        user = self.model(email=email, date_of_birth=date_of_birth, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, date_of_birth, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        return self.create_user(email, date_of_birth, password, **extra_fields)
+
+```
+(2)Create a custom user model:
+
+```python
+
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.db import models
+
+class CustomUser(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(unique=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['date_of_birth']
+
+    def __str__(self):
+        return self.email
+
+```
+
+
+
+
+
+
+
+
+
+
+
+Define RegistrationForm 
  + Create forms.py in your app "user" : 
 
 ```python
