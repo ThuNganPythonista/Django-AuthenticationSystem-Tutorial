@@ -18,7 +18,7 @@ In this tutorial, I would introduce to you some basic features of authentication
 
 **USER MODEL**:  
 
-+ **AbstractUser**: You understand simply that Django provide you abstract class from its model module `django.contrib.auth.models`. Use `AbstractUser` when you just want to inherit from `AbstractUser` such as username, email, password, first_name, last_name, v.v. (common fields and pre-built methods)
++ **AbstractUser**: You understand simply that Django provide you abstract class from its model module `django.contrib.auth.models`. Use `AbstractUser` when you just want to inherit from `AbstractUser` such as username, email, password, first_name, last_name, v.v. (common fields and pre-built methods). You only can remove the field "name" and add some more fields. 
 
   Now, you will create `models.py` file under your app :
 
@@ -35,7 +35,7 @@ class CustomUser(AbstractUser):
 Here, you already inherited `date_of_birth` and `email` from `AbstractUser`
 
 
-+ **AbstractBaseUser**: Same as `AbstractUser`, the difference is that you will create a completely new based on your idea. You will define yourself fields such as username, email ... It will be the better choice if you want more control over how your user model is built.
++ **AbstractBaseUser**: Same as `AbstractUser`, the difference is that you will create a completely new based on your idea. You will define yourself fields such as username, email ... It will be the better choice if you want more control over how your user model is built. For example, n the case of a model with 3 fields: color, code, logan, if you want more flexibility and do not want to use Django's default fields like username, email, you can use AbstractBaseUser.
 
 Similarly, you create `models.py` file under your app :
 
@@ -86,8 +86,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 ```
 
+**SETTINGS**:  
 
-
+Include the following line in the `settings.py` file to inform Django to utilize the newly defined custom user class.
 
 
 
