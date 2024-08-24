@@ -1,4 +1,4 @@
-# Django Tutorial - AUTHENTICATION SYSTEM(SET UP REGISTER & LOGIN BACK-END FOR YOUR WEB)
+# Djang Tutorial - AUTHENTICATION SYSTEM(SET UP REGISTER & LOGIN BACK-END FOR YOUR WEB)
 
 In this tutorial, I would introduce to you some basic features of authentication system in Django framework including registration, login, password reset, userprofile.
 
